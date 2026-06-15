@@ -27,7 +27,7 @@ class KycManager
         }
 
         $mimeType = self::detectMimeType($file['tmp_name']);
-        if (!self::isAllowedMime($mimeType, $extension)) {
+        if (!self::isAllowedMime($mimeType, $extension, $file['tmp_name'])) {
             throw new InvalidArgumentException('KYC file MIME type is not allowed.');
         }
 
@@ -99,15 +99,53 @@ class KycManager
         return 'application/octet-stream';
     }
 
-    private static function isAllowedMime(string $mimeType, string $extension): bool
+    private static function isAllowedMime(string $mimeType, string $extension, string $path): bool
     {
         $allowed = [
-            'pdf' => ['application/pdf'],
-            'jpg' => ['image/jpeg'],
-            'jpeg' => ['image/jpeg'],
-            'png' => ['image/png'],
+            'pdf' => ['application/pdf', 'application/x-pdf', 'application/acrobat', 'applications/vnd.pdf', 'text/pdf'],
+            'jpg' => ['image/jpeg', 'image/pjpeg'],
+            'jpeg' => ['image/jpeg', 'image/pjpeg'],
+            'png' => ['image/png', 'image/x-png'],
         ];
 
-        return in_array($mimeType, $allowed[$extension] ?? [], true);
+        if (in_array($mimeType, $allowed[$extension] ?? [], true)) {
+            return self::hasValidFileSignature($extension, $path);
+        }
+
+        $genericMimeTypes = [
+            'application/octet-stream',
+            'binary/octet-stream',
+            'application/download',
+            'application/force-download',
+            'unknown/unknown',
+        ];
+
+        return in_array($mimeType, $genericMimeTypes, true)
+            && self::hasValidFileSignature($extension, $path);
+    }
+
+    private static function hasValidFileSignature(string $extension, string $path): bool
+    {
+        $handle = @\fopen($path, 'rb');
+        if (!$handle) {
+            return false;
+        }
+
+        $bytes = \fread($handle, 16) ?: '';
+        \fclose($handle);
+
+        if (in_array($extension, ['jpg', 'jpeg'], true)) {
+            return \str_starts_with($bytes, "\xFF\xD8\xFF");
+        }
+
+        if ($extension === 'png') {
+            return \str_starts_with($bytes, "\x89PNG\r\n\x1A\n");
+        }
+
+        if ($extension === 'pdf') {
+            return \str_starts_with($bytes, '%PDF-');
+        }
+
+        return false;
     }
 }
