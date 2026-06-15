@@ -14,7 +14,11 @@ class AdminController
 
         try {
             if (($_GET['action'] ?? '') === 'download_kyc') {
-                self::downloadKycDocument((int) ($_GET['request_id'] ?? 0), (int) ($_GET['document_id'] ?? 0));
+                self::serveKycDocument((int) ($_GET['request_id'] ?? 0), (int) ($_GET['document_id'] ?? 0), true);
+            }
+
+            if (($_GET['action'] ?? '') === 'view_kyc') {
+                self::serveKycDocument((int) ($_GET['request_id'] ?? 0), (int) ($_GET['document_id'] ?? 0), false);
             }
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'update_status') {
@@ -104,7 +108,12 @@ class AdminController
                 . '&request_id=' . (int) $requestId
                 . '&document_id=' . (int) $doc->id
                 . '&token=' . urlencode($token);
+            $viewUrl = 'addonmodules.php?module=bisup_ptr_port25&action=view_kyc'
+                . '&request_id=' . (int) $requestId
+                . '&document_id=' . (int) $doc->id
+                . '&token=' . urlencode($token);
             $documents .= '<li>'
+                . '<a href="' . self::e($viewUrl) . '" class="btn btn-primary btn-xs" target="_blank" rel="noopener">View</a> '
                 . '<a href="' . self::e($downloadUrl) . '" class="btn btn-default btn-xs">Download</a> '
                 . self::e($doc->document_type) . ': ' . self::e($doc->original_filename)
                 . ' (' . number_format((int) $doc->file_size / 1024, 1) . ' KB)'
@@ -150,7 +159,7 @@ class AdminController
         ]);
     }
 
-    private static function downloadKycDocument(int $requestId, int $documentId): void
+    private static function serveKycDocument(int $requestId, int $documentId, bool $forceDownload): void
     {
         if (function_exists('check_token')) {
             check_token('WHMCS.admin.default');
@@ -165,16 +174,17 @@ class AdminController
             'request_id' => $requestId,
             'admin_id' => (int) ($_SESSION['adminid'] ?? 0),
             'client_id' => (int) $doc->client_id,
-            'action' => 'kyc_downloaded',
-            'note' => 'KYC document downloaded: ' . $doc->original_filename,
+            'action' => $forceDownload ? 'kyc_downloaded' : 'kyc_viewed',
+            'note' => 'KYC document ' . ($forceDownload ? 'downloaded' : 'viewed') . ': ' . $doc->original_filename,
         ]);
 
         while (ob_get_level() > 0) {
             ob_end_clean();
         }
 
+        $disposition = $forceDownload ? 'attachment' : 'inline';
         header('Content-Type: ' . $doc->mime_type);
-        header('Content-Disposition: attachment; filename="' . addslashes($doc->original_filename) . '"');
+        header('Content-Disposition: ' . $disposition . '; filename="' . addslashes($doc->original_filename) . '"');
         header('Content-Length: ' . filesize($doc->file_path));
         header('X-Content-Type-Options: nosniff');
         readfile($doc->file_path);
