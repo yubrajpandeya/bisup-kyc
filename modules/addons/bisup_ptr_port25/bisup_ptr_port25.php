@@ -43,10 +43,10 @@ function bisup_ptr_port25_config()
                 'Default' => 'pdf,jpg,jpeg,png',
             ],
             'notification_email' => [
-                'FriendlyName' => 'Notification Email',
+                'FriendlyName' => 'Legacy Notification Email',
                 'Type' => 'text',
                 'Size' => '60',
-                'Description' => 'Fallback internal notification recipient.',
+                'Description' => 'Deprecated. Request notices are sent through WHMCS mail so General Settings > Mail > BCC Messages receives a copy.',
                 'Default' => '',
             ],
             'require_senior_approval_high_risk' => [
@@ -106,4 +106,3 @@ function bisup_ptr_port25_clientarea($vars)
     require_once __DIR__ . '/clientarea.php';
     return Bisup\PtrPort25\ClientAreaController::handle($vars);
 }
-

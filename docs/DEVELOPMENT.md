@@ -16,7 +16,7 @@ Automatic PTR creation, provider API calls, and Port 25 firewall changes are int
 - `lib/RequestManager.php`: Request CRUD and status changes.
 - `lib/KycManager.php`: Upload validation and storage.
 - `lib/AuditLogger.php`: Audit trail.
-- `lib/NotificationManager.php`: Notification integration layer.
+- `lib/NotificationManager.php`: WHMCS mail integration. Customer email delivery is used so WHMCS Mail BCC settings receive a copy.
 
 ## Database Tables
 

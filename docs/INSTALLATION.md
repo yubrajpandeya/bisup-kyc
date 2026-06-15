@@ -17,9 +17,18 @@
    - Eligible product IDs
    - Maximum KYC file size
    - Allowed file types
-   - Notification email
    - Senior approval requirement for high-risk requests
 5. Assign admin role permissions for the module.
+
+## Email Notifications
+
+Request-submitted notices are sent through WHMCS mail using the internal `SendEmail` API. To receive copies internally, configure:
+
+```text
+WHMCS Admin > Configuration > System Settings > General Settings > Mail > BCC Messages
+```
+
+Separate multiple BCC recipients with commas.
 
 ## Client Access
 

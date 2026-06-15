@@ -330,7 +330,7 @@ Admin can configure:
 - Ticket department ID
 - Require admin approval for all requests
 - Require senior approval for high-risk requests
-- Notification email
+- WHMCS Mail BCC recipients for internal notification copies
 - Daily pending request reminder
 - Default rejection message
 - Anti-spam policy text
@@ -396,4 +396,3 @@ The current release includes:
 - Abuse investigation becomes faster.
 - IP blacklist risk decreases.
 - Client verification becomes standardized.
-
