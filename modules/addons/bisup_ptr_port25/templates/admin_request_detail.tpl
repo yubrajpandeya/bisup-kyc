@@ -82,3 +82,51 @@
     </thead>
     <tbody>{{logs}}</tbody>
 </table>
+
+<div class="modal fade" id="bisupKycViewModal" tabindex="-1" role="dialog" aria-labelledby="bisupKycViewTitle">
+    <div class="modal-dialog modal-lg" role="document" style="width: 90%; max-width: 1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="bisupKycViewTitle">KYC Document</h4>
+            </div>
+            <div class="modal-body" style="height: 75vh; padding: 0;">
+                <iframe id="bisupKycViewFrame" src="about:blank" style="width:100%; height:100%; border:0;" title="KYC document preview"></iframe>
+            </div>
+            <div class="modal-footer">
+                <a id="bisupKycDownloadLink" href="#" class="btn btn-default">Open in Browser</a>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var buttons = document.querySelectorAll('.bisup-kyc-view');
+    var frame = document.getElementById('bisupKycViewFrame');
+    var title = document.getElementById('bisupKycViewTitle');
+    var openLink = document.getElementById('bisupKycDownloadLink');
+
+    buttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            var url = button.getAttribute('data-url');
+            title.textContent = button.getAttribute('data-title') || 'KYC Document';
+            frame.setAttribute('src', url);
+            openLink.setAttribute('href', url);
+
+            if (window.jQuery && jQuery.fn.modal) {
+                jQuery('#bisupKycViewModal').modal('show');
+            } else {
+                window.open(url, '_blank', 'noopener');
+            }
+        });
+    });
+
+    if (window.jQuery && jQuery.fn.modal) {
+        jQuery('#bisupKycViewModal').on('hidden.bs.modal', function () {
+            frame.setAttribute('src', 'about:blank');
+        });
+    }
+});
+</script>

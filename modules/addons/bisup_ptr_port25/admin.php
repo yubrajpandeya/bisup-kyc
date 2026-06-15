@@ -113,7 +113,7 @@ class AdminController
                 . '&document_id=' . (int) $doc->id
                 . '&token=' . urlencode($token);
             $documents .= '<li>'
-                . '<a href="' . self::e($viewUrl) . '" class="btn btn-primary btn-xs" target="_blank" rel="noopener">View</a> '
+                . '<button type="button" class="btn btn-primary btn-xs bisup-kyc-view" data-url="' . self::e($viewUrl) . '" data-title="' . self::e($doc->original_filename) . '">View</button> '
                 . '<a href="' . self::e($downloadUrl) . '" class="btn btn-default btn-xs">Download</a> '
                 . self::e($doc->document_type) . ': ' . self::e($doc->original_filename)
                 . ' (' . number_format((int) $doc->file_size / 1024, 1) . ' KB)'
