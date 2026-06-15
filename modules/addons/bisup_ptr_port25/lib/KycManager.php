@@ -85,14 +85,18 @@ class KycManager
 
     private static function detectMimeType(string $path): string
     {
-        if (function_exists('finfo_open')) {
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mime = finfo_file($finfo, $path);
-            finfo_close($finfo);
+        if (\function_exists('finfo_open')) {
+            $finfo = \finfo_open(FILEINFO_MIME_TYPE);
+            $mime = \finfo_file($finfo, $path);
+            \finfo_close($finfo);
             return $mime ?: 'application/octet-stream';
         }
 
-        return mime_content_type($path) ?: 'application/octet-stream';
+        if (\function_exists('mime_content_type')) {
+            return \mime_content_type($path) ?: 'application/octet-stream';
+        }
+
+        return 'application/octet-stream';
     }
 
     private static function isAllowedMime(string $mimeType, string $extension): bool
@@ -107,4 +111,3 @@ class KycManager
         return in_array($mimeType, $allowed[$extension] ?? [], true);
     }
 }
-
