@@ -45,9 +45,31 @@ class RequestManager
         return Capsule::table('mod_bisup_ptr25_kyc_documents')->where('request_id', $requestId)->orderBy('uploaded_at', 'desc')->get();
     }
 
+    public static function documentForRequest(int $documentId, int $requestId)
+    {
+        return Capsule::table('mod_bisup_ptr25_kyc_documents')
+            ->where('id', $documentId)
+            ->where('request_id', $requestId)
+            ->first();
+    }
+
     public static function auditLogs(int $requestId)
     {
         return Capsule::table('mod_bisup_ptr25_audit_logs')->where('request_id', $requestId)->orderBy('created_at', 'desc')->get();
+    }
+
+    public static function dashboardCounts(): array
+    {
+        $counts = [
+            'total' => Capsule::table('mod_bisup_ptr25_requests')->count(),
+            'high_risk' => Capsule::table('mod_bisup_ptr25_requests')->where('risk_level', 'high')->count(),
+        ];
+
+        foreach (self::STATUSES as $status) {
+            $counts[$status] = Capsule::table('mod_bisup_ptr25_requests')->where('status', $status)->count();
+        }
+
+        return $counts;
     }
 
     public static function eligibleServices(int $clientId, array $productIds)
@@ -108,7 +130,7 @@ class RequestManager
         return $id;
     }
 
-    public static function updateStatus(int $requestId, string $newStatus, int $adminId, string $note = ''): void
+    public static function updateStatus(int $requestId, string $newStatus, int $adminId, string $note = '', string $noteType = 'internal'): void
     {
         if (!in_array($newStatus, self::STATUSES, true)) {
             throw new InvalidArgumentException('Invalid request status.');
@@ -139,14 +161,17 @@ class RequestManager
 
         Capsule::table('mod_bisup_ptr25_requests')->where('id', $requestId)->update($updates);
 
+        $action = $noteType === 'client_alert' ? 'status_changed_client_alert' : 'status_changed';
+        $notePrefix = $noteType === 'client_alert' ? '[Client alert] ' : '[Internal note] ';
+
         AuditLogger::log([
             'request_id' => $requestId,
             'admin_id' => $adminId,
             'client_id' => $request->client_id,
-            'action' => 'status_changed',
+            'action' => $action,
             'old_status' => $request->status,
             'new_status' => $newStatus,
-            'note' => $note,
+            'note' => $notePrefix . $note,
         ]);
     }
 

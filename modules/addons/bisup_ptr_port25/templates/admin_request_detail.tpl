@@ -38,18 +38,20 @@
                     <div class="form-group">
                         <label>Status</label>
                         <select name="status" class="form-control">
-                            <option value="under_review">Under Review</option>
-                            <option value="more_info_required">More Info Required</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            <option value="enabled">Enabled - Manual Technical Work Completed</option>
-                            <option value="suspended">Suspended</option>
-                            <option value="abuse_flagged">Abuse Flagged</option>
+                            {{status_options}}
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label>Internal Note</label>
+                        <label>Note Type</label>
+                        <select name="note_type" class="form-control">
+                            <option value="internal">Internal note only</option>
+                            <option value="client_alert">Client alert email + audit note</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Note</label>
                         <textarea name="note" class="form-control" rows="5" required></textarea>
                     </div>
 

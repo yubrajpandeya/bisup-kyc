@@ -39,6 +39,23 @@ class NotificationManager
         self::recordUnsentNotification($requestId, (int) $request->client_id, $subject, $message);
     }
 
+    public static function notifyClientStatusUpdate(int $requestId, string $newStatus, string $note): void
+    {
+        $request = RequestManager::find($requestId);
+        if (!$request || !function_exists('localAPI')) {
+            return;
+        }
+
+        localAPI('SendEmail', [
+            'id' => (int) $request->client_id,
+            'customtype' => 'general',
+            'customsubject' => 'PTR / Port 25 request update #' . $requestId,
+            'custommessage' => '<p>Your PTR / Port 25 request has been updated.</p>'
+                . '<p><strong>Status:</strong> ' . self::e($newStatus) . '</p>'
+                . '<p>' . nl2br(self::e($note)) . '</p>',
+        ]);
+    }
+
     public static function configuredBccRecipients(): array
     {
         $value = Capsule::table('tblconfiguration')
