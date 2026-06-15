@@ -1,8 +1,8 @@
 # Bisup WHMCS PTR & Port 25 Approval Module
 
-WHMCS addon module for moderating PTR/rDNS and outgoing Port 25 requests before any manual technical change is made.
+A WHMCS addon module for reviewing PTR/rDNS and outgoing Port 25 requests through a documented KYC, approval, and audit workflow.
 
-Version 1 is intentionally focused on:
+The first release focuses on governance and operational control:
 
 - KYC collection
 - Client/service/IP request capture
@@ -10,9 +10,13 @@ Version 1 is intentionally focused on:
 - Approval/rejection workflow
 - Staff accountability
 - Audit logs
-- Email/ticket-ready notification structure
+- Notification-ready workflow events
 
-PTR creation and Port 25 firewall automation are **not** part of v1. Bisup staff should not create PTR records or enable outgoing Port 25 outside this WHMCS approval module.
+PTR creation and Port 25 firewall automation are outside the current release scope. The module is designed to establish the approval record before any network or DNS change is performed.
+
+## Repository Status
+
+This project is in initial development and should be tested in a WHMCS staging environment before production deployment.
 
 ## Module Path
 
@@ -54,7 +58,7 @@ prd.txt
 3. Client uploads KYC documents and accepts the anti-spam declaration.
 4. Staff reviews the request in the addon admin page.
 5. Senior/admin staff approve, reject, request more info, suspend, or flag abuse.
-6. Technical staff manually perform PTR/Port 25 changes only after approval.
+6. Technical staff complete any required DNS or network changes after an approved request exists.
 7. Every staff action is recorded in the audit log.
 
 ## Statuses
@@ -69,9 +73,12 @@ prd.txt
 - `suspended`
 - `abuse_flagged`
 
-## Development Status
+## Security
 
-This repository contains the first implementation scaffold. It is ready for WHMCS integration testing in a staging WHMCS install before production use.
+This module handles sensitive identity documents. Review [SECURITY.md](SECURITY.md) and [docs/SECURITY_AND_AUDIT.md](docs/SECURITY_AND_AUDIT.md) before deployment.
 
-See [docs/INSTALLATION.md](docs/INSTALLATION.md) and [docs/SECURITY_AND_AUDIT.md](docs/SECURITY_AND_AUDIT.md).
+## Documentation
 
+- [Installation](docs/INSTALLATION.md)
+- [Development Notes](docs/DEVELOPMENT.md)
+- [Security and Audit](docs/SECURITY_AND_AUDIT.md)

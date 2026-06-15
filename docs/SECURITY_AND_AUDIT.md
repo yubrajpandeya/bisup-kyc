@@ -1,10 +1,8 @@
 # Security and Audit Policy
 
-## Operational Rule
+## Approval Control
 
-No Bisup staff member should create PTR records or enable outgoing Port 25 outside this WHMCS approval module.
-
-The WHMCS request record is the source of truth for:
+The WHMCS request record is intended to be the authoritative approval record for:
 
 - Client identity
 - Service ownership
@@ -31,6 +29,14 @@ The module validates:
 - Upload error status
 
 Executable file types are not allowed.
+
+Recommended deployment controls:
+
+- Keep the WHMCS attachments directory outside the public web root where possible.
+- Disable direct web access to KYC storage paths.
+- Restrict file downloads to authorized WHMCS admin roles.
+- Use HTTPS for all client and admin traffic.
+- Apply an internal retention policy for identity documents.
 
 ## Audit Events
 
@@ -60,9 +66,9 @@ Each log entry stores:
 
 ## Manual Technical Enablement
 
-Version 1 does not automate PTR or firewall changes.
+The current release does not automate PTR or firewall changes.
 
-After approval, technical staff may manually create PTR records or enable outgoing Port 25, then mark the request as `enabled` in the module. That status change is audited.
+After approval, authorized staff can complete the required DNS or network change and then mark the request as `enabled` in the module. That status change is audited.
 
 ## Version 2 Automation Guardrails
 
@@ -74,3 +80,6 @@ Any future automation must:
 - Allow rollback or suspension
 - Never bypass KYC and moderation
 
+## Vulnerability Reporting
+
+Do not open public issues for suspected security vulnerabilities. Report privately to the repository maintainer or the organization security contact.

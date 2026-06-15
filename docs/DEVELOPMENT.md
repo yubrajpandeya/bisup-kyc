@@ -4,7 +4,7 @@
 
 The first version is a WHMCS addon module, not a provider automation tool.
 
-Do not add automatic PTR creation, provider API calls, or Port 25 firewall changes until the moderation workflow has been tested and accepted.
+Automatic PTR creation, provider API calls, and Port 25 firewall changes are intentionally out of scope for the current release.
 
 ## Main Entry Points
 
@@ -16,7 +16,7 @@ Do not add automatic PTR creation, provider API calls, or Port 25 firewall chang
 - `lib/RequestManager.php`: Request CRUD and status changes.
 - `lib/KycManager.php`: Upload validation and storage.
 - `lib/AuditLogger.php`: Audit trail.
-- `lib/NotificationManager.php`: Email/ticket integration placeholder.
+- `lib/NotificationManager.php`: Notification integration layer.
 
 ## Database Tables
 
@@ -31,5 +31,4 @@ Do not add automatic PTR creation, provider API calls, or Port 25 firewall chang
 - Validate service ownership before accepting a request.
 - Keep KYC files outside public web paths.
 - Add audit logs for every meaningful state change.
-- Never add automation that bypasses the `approved` status.
-
+- Any future automation must require an `approved` request status.

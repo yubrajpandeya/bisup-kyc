@@ -2,10 +2,11 @@
 
 ## Requirements
 
-- WHMCS 8.x recommended
-- PHP 8.1 or newer recommended
+- WHMCS 8.x
+- PHP 8.1 or newer
 - Admin access to WHMCS
-- Writable WHMCS attachments directory for private KYC storage
+- Writable WHMCS attachments directory for protected KYC storage
+- HTTPS enabled for the WHMCS client and admin areas
 
 ## Install
 
@@ -41,5 +42,6 @@ Admins can review requests, change status, add internal notes, and download KYC 
 - Test uploads, approval, rejection, and audit logging in staging first.
 - Confirm the WHMCS attachments path is not publicly accessible.
 - Confirm only authorized staff roles can access the addon.
-- Do not enable PTR or Port 25 unless the request is approved in this module.
-
+- Configure server-level backups according to your data retention policy.
+- Confirm local privacy and identity-document retention requirements before collecting KYC.
+- Complete DNS or network changes only after a request has been approved and recorded.
