@@ -1,0 +1,603 @@
+# PRD: WHMCS PTR / rDNS & Outgoing Port 25 KYC Moderation Module
+
+## 1. Product Name
+
+**Bisup WHMCS PTR & Port 25 Approval Module**
+
+## 2. Module Type
+
+WHMCS Addon Module
+
+The module will run inside WHMCS and provide:
+
+* Client-side request form
+* Admin-side moderation panel
+* KYC document upload
+* PTR / rDNS request management
+* Outgoing Port 25 approval management
+* Staff approval workflow
+* Audit logs
+* Ticket/email notifications
+
+## 3. Main Goal
+
+To create a controlled approval system inside WHMCS before enabling:
+
+* PTR / rDNS records
+* Outgoing SMTP Port 25
+* Mail server sending permission
+
+This module will reduce spam abuse, protect Bisup IP reputation, and ensure every request has proper KYC, moderation, and audit history.
+
+## 4. Why This Module Is Needed
+
+Currently, PTR and Port 25 approvals may happen manually through staff chat or support tickets.
+
+That is weak because:
+
+* No structured approval workflow
+* No mandatory KYC check
+* No audit log
+* No abuse-risk scoring
+* No staff accountability
+* No proper link between client, service, IP, and approval
+* Higher chance of IP blacklist issues
+
+This module will make PTR and Port 25 approval mandatory, trackable, and controlled.
+
+## 5. Target Users
+
+### Client
+
+WHMCS clients who need PTR / rDNS or outgoing Port 25 enabled for their VPS, dedicated server, or mail server.
+
+### Support Staff
+
+Staff who review submitted requests and verify client details.
+
+### Admin
+
+Senior staff who can approve, reject, enable, suspend, or flag requests.
+
+## 6. Client Area Features
+
+### 6.1 Client Request Page
+
+A new page inside WHMCS client area:
+
+**Client Area → Services → PTR / Port 25 Request**
+
+Client can submit request for:
+
+* PTR / rDNS only
+* Outgoing Port 25 only
+* Both PTR and Port 25
+
+### 6.2 Service Selection
+
+Client must select an active WHMCS service.
+
+The module should only show eligible active services such as:
+
+* VPS
+* Dedicated Server
+* Cloud Server
+* Email Server
+* Custom server products selected by admin
+
+The system should not allow requests for cancelled, suspended, terminated, or unpaid services.
+
+### 6.3 Required Client Fields
+
+Client must provide:
+
+* Service ID
+* Server IP address
+* Requested PTR hostname
+* Mail sending domain
+* Reason for request
+* Type of email usage
+* Estimated daily email volume
+* Mail server software
+* Business/organization name
+* Website URL
+* Contact person name
+* Contact number
+
+### 6.4 Mail Usage Type
+
+Client must select one:
+
+* Transactional emails
+* Business emails
+* Hosting client emails
+* Application/system emails
+* Newsletter with consent
+* Other
+
+Bulk unsolicited email, spam, phishing, spoofing, or illegal email usage must be rejected.
+
+### 6.5 DNS Readiness Fields
+
+Client must confirm:
+
+* Domain has valid A record
+* SPF is configured
+* DKIM is configured or planned
+* DMARC is configured or planned
+* Mail hostname is valid
+* PTR hostname belongs to the client’s domain
+
+### 6.6 KYC Upload
+
+Client must upload KYC documents before submitting.
+
+For individual clients:
+
+* Citizenship / National ID / Passport
+* Address proof if required
+
+For company clients:
+
+* Company registration certificate
+* PAN/VAT document if available
+* Authorized person ID
+
+Supported file types:
+
+* PDF
+* JPG
+* PNG
+* JPEG
+
+Maximum file size should be configurable from module settings.
+
+### 6.7 Client Declaration
+
+Client must agree to this checkbox before submission:
+
+> I confirm that this server will not be used for spam, phishing, spoofing, malware, bulk unsolicited emails, or illegal activity. I understand that Bisup may suspend the service, block Port 25, or terminate service if abuse is detected.
+
+Submission should not be possible without this agreement.
+
+## 7. Admin Area Features
+
+### 7.1 Admin Dashboard
+
+WHMCS admin page:
+
+**Addons → PTR & Port 25 Moderation**
+
+Dashboard should show:
+
+* Total requests
+* Pending requests
+* Approved requests
+* Rejected requests
+* Enabled requests
+* Abuse-flagged requests
+* High-risk requests
+
+### 7.2 Request List
+
+Admin can filter by:
+
+* Status
+* Client
+* Service ID
+* IP address
+* Request type
+* Risk level
+* Date
+* Staff reviewer
+
+### 7.3 Request Detail Page
+
+Admin can view:
+
+* Client profile
+* WHMCS client ID
+* Selected service
+* Product name
+* Service status
+* Server IP
+* Requested PTR hostname
+* Mail domain
+* Usage reason
+* Estimated mail volume
+* Uploaded KYC documents
+* Staff notes
+* Audit history
+* Current status
+
+### 7.4 Admin Actions
+
+Admin/staff can:
+
+* Approve request
+* Reject request
+* Request more information
+* Mark as enabled
+* Mark as suspended
+* Mark as abuse flagged
+* Add internal notes
+* Download KYC documents
+* Open related WHMCS client profile
+* Open related WHMCS service
+* Create support ticket
+* Send notification to client
+
+## 8. Request Statuses
+
+The module should support these statuses:
+
+* Pending KYC
+* Submitted
+* Under Review
+* More Info Required
+* Approved
+* Rejected
+* Enabled
+* Suspended
+* Abuse Flagged
+
+## 9. Approval Rules
+
+PTR / Port 25 should not be approved unless:
+
+* WHMCS client account is active
+* Selected service is active
+* Invoice is not overdue
+* IP belongs to the selected service
+* KYC documents are uploaded
+* Client details are verified
+* Requested PTR hostname is valid
+* PTR hostname matches a domain controlled by the client
+* Mail usage reason is valid
+* Client has accepted anti-spam policy
+* No previous abuse history exists
+
+## 10. Risk Level System
+
+Each request should have a risk level.
+
+### Low Risk
+
+* Existing verified client
+* Active paid service
+* Company KYC provided
+* Proper mail domain
+* Valid SPF/DKIM/DMARC
+* Transactional/business mail only
+
+### Medium Risk
+
+* New client
+* Individual KYC only
+* Low email volume
+* Partial DNS setup
+* No previous abuse history
+
+### High Risk
+
+* New account requesting Port 25 immediately
+* Incomplete KYC
+* Suspicious domain
+* High email volume
+* Bulk email use case
+* Previous abuse reports
+* Mismatch between client, domain, and IP
+
+High-risk requests should require senior admin approval.
+
+## 11. WHMCS Integration Requirements
+
+### 11.1 WHMCS Client Integration
+
+The module should connect requests with:
+
+* tblclients
+* tblhosting
+* tblproducts
+* tblservers
+* tbltickets if ticket integration is enabled
+
+### 11.2 WHMCS Admin Permissions
+
+The module should support WHMCS admin roles.
+
+Permission levels:
+
+* View requests
+* Review requests
+* Approve/reject requests
+* Download KYC documents
+* Manage module settings
+* Export logs
+
+### 11.3 WHMCS Email Templates
+
+The module should create email templates for:
+
+* Request submitted
+* KYC missing
+* More information required
+* Request approved
+* Request rejected
+* PTR / Port 25 enabled
+* Request suspended
+* Abuse warning
+
+### 11.4 WHMCS Ticket Integration
+
+Optional setting:
+
+* Automatically create a WHMCS support ticket when a request is submitted
+* Add admin notes to ticket
+* Update ticket when status changes
+* Close ticket after request is enabled or rejected
+
+### 11.5 WHMCS Hooks
+
+Recommended hooks:
+
+* ClientAreaPrimarySidebar
+* ClientAreaPage
+* AdminAreaHeaderOutput
+* DailyCronJob
+* AfterModuleSuspend
+* AfterModuleTerminate
+* InvoicePaid
+* InvoiceCreation
+
+Use cases:
+
+* Show PTR/Port 25 request link in client area
+* Hide request form for suspended services
+* Auto-flag requests if service becomes suspended
+* Auto-check pending requests daily
+* Notify admin about old pending requests
+
+## 12. Technical Scope
+
+### 12.1 WHMCS Addon Folder
+
+Module path:
+
+`/modules/addons/bisup_ptr_port25/`
+
+Main files:
+
+* `bisup_ptr_port25.php`
+* `hooks.php`
+* `clientarea.php`
+* `admin.php`
+* `templates/clientarea.tpl`
+* `templates/admin_requests.tpl`
+* `templates/admin_request_detail.tpl`
+* `lib/RequestManager.php`
+* `lib/KycManager.php`
+* `lib/NotificationManager.php`
+* `lib/AuditLogger.php`
+
+## 13. Database Tables
+
+### 13.1 mod_bisup_ptr25_requests
+
+Fields:
+
+* id
+* client_id
+* service_id
+* product_id
+* request_type
+* ip_address
+* ptr_hostname
+* mail_domain
+* mail_usage_type
+* usage_reason
+* estimated_daily_volume
+* mail_server_software
+* spf_status
+* dkim_status
+* dmarc_status
+* risk_level
+* status
+* client_declaration
+* reviewed_by
+* approved_by
+* rejected_by
+* rejection_reason
+* enabled_by
+* enabled_at
+* created_at
+* updated_at
+
+### 13.2 mod_bisup_ptr25_kyc_documents
+
+Fields:
+
+* id
+* request_id
+* client_id
+* document_type
+* original_filename
+* stored_filename
+* file_path
+* mime_type
+* file_size
+* verification_status
+* uploaded_at
+
+### 13.3 mod_bisup_ptr25_audit_logs
+
+Fields:
+
+* id
+* request_id
+* admin_id
+* client_id
+* action
+* old_status
+* new_status
+* note
+* ip_address
+* created_at
+
+### 13.4 mod_bisup_ptr25_settings
+
+Fields:
+
+* id
+* setting_key
+* setting_value
+* created_at
+* updated_at
+
+## 14. Module Settings
+
+Admin should be able to configure:
+
+* Eligible product IDs
+* Maximum KYC file size
+* Allowed file types
+* Auto-create ticket: yes/no
+* Ticket department ID
+* Require admin approval for all requests: yes/no
+* Require senior approval for high-risk requests: yes/no
+* Notification email
+* Daily pending request reminder: yes/no
+* Default rejection message
+* Anti-spam policy text
+
+## 15. Workflow
+
+### Step 1: Client Opens Request Page
+
+Client selects an active service and request type.
+
+### Step 2: Client Submits Details
+
+Client submits PTR hostname, mail domain, usage reason, mail volume, DNS status, and KYC documents.
+
+### Step 3: System Validation
+
+System checks:
+
+* Client is logged in
+* Service belongs to client
+* Service is active
+* IP address format is valid
+* PTR hostname format is valid
+* Required KYC uploaded
+* Declaration accepted
+
+### Step 4: Request Created
+
+Request status becomes:
+
+**Submitted**
+
+Staff/admin receives notification.
+
+### Step 5: Staff Review
+
+Staff checks:
+
+* Client profile
+* KYC documents
+* Service details
+* IP address
+* Mail use case
+* DNS readiness
+* Abuse risk
+
+### Step 6: Admin Decision
+
+Admin can:
+
+* Approve
+* Reject
+* Request more information
+
+### Step 7: Technical Enablement
+
+After approval, technical team manually creates PTR record or enables outgoing Port 25.
+
+Status becomes:
+
+**Enabled**
+
+### Step 8: Audit Log Stored
+
+Every action is logged with:
+
+* Admin ID
+* Client ID
+* Action
+* Status change
+* Notes
+* Date/time
+
+## 16. Security Requirements
+
+* KYC documents must not be publicly accessible
+* Files must be stored outside public web root if possible
+* Only permitted admins can download KYC
+* File upload must validate MIME type and extension
+* Reject executable files
+* Sanitize all input
+* Use WHMCS CSRF token validation
+* Use WHMCS admin permission checks
+* Log every approval/rejection/download action
+
+## 17. MVP Version
+
+Version 1 should include:
+
+* WHMCS client request form
+* Service selection
+* KYC upload
+* Admin request list
+* Admin request detail page
+* Status management
+* Internal notes
+* Approval/rejection
+* Audit logs
+* Email notifications
+* Basic module settings
+
+## 18. Version 2 Features
+
+Future improvements:
+
+* Automatic SPF/DKIM/DMARC checker
+* Automatic PTR hostname DNS validation
+* IP reputation checker
+* Abuse report integration
+* Auto-suspend Port 25 after abuse flag
+* Client trust score
+* Blacklist monitoring
+* Proxmox/VPS module integration
+* Provider API integration for automatic PTR creation
+* Firewall automation for Port 25 opening/closing
+
+## 19. Success Metrics
+
+The module is successful if:
+
+* No Port 25 approval happens without KYC
+* No PTR request is approved without audit history
+* Staff can see all pending requests clearly
+* Every request is linked to a WHMCS client and service
+* Abuse investigation becomes faster
+* Bisup IP blacklist risk decreases
+* Client verification becomes standardized
+
+## 20. Final Recommendation
+
+This should be developed as a WHMCS Addon Module first.
+
+Automation for PTR creation and Port 25 firewall changes should come later. The first version should focus on moderation, KYC, approval workflow, staff accountability, and audit logs.
+
+No Bisup staff should create PTR records or enable outgoing Port 25 outside this WHMCS approval module.
